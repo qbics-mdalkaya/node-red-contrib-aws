@@ -50,7 +50,7 @@ module.exports = function(RED) {
 		var awsService = new AWS.KMS( { 'region': node.region } );
 
 		node.on("input", function(msg) {
-			node.sendMsg = function (err, data) {
+			node.sendMsg = function (err, data, msg) {
 				if (err) {
 				    node.status({fill:"red",shape:"ring",text:"error"});
                     node.error("failed: " + err.toString(), msg);
@@ -62,14 +62,12 @@ module.exports = function(RED) {
 				}
 				node.send([msg,null]);
 			};
-		
-			var _cb=function(err,data){
-				node.sendMsg(err,data);
-			}		
 
 			if (typeof service[node.operation] == "function"){
 				node.status({fill:"blue",shape:"dot",text:node.operation});
-				service[node.operation](awsService,msg,_cb);
+				service[node.operation](awsService,msg,function(err,data){
+   				node.sendMsg(err, data, msg);
+   			});
 			} else {
 				node.error("failed: Operation node defined - "+node.operation);
 			}
@@ -80,7 +78,7 @@ module.exports = function(RED) {
 			outArg = (typeof outArg !== 'undefined') ? outArg : arg;
 
 			if (typeof src[arg] !== 'undefined'){
-				if (isObject && typeof src[arg]=="string" && src[arg] != "") { 
+				if (isObject && typeof src[arg]=="string" && src[arg] != "") {
 					tmpValue=JSON.parse(src[arg]);
 				}
 				out[outArg]=tmpValue;
@@ -808,7 +806,7 @@ module.exports = function(RED) {
 			svc.verify(params,cb);
 		}
 
-			
+		 
 
 	}
 	RED.nodes.registerType("AWS KMS", AmazonAPINode);
