@@ -18,6 +18,7 @@ Nodes (All AWS API functions are available)
 * Firehose
 * KMS
 * Redshift
+* Route53
 * AWS config
 
 Payload returned from the AWS SDK is sometimes (particularly S3.Get) encoded in a BUFFER.  To parse this to a string pass the output into a function with msg.payload=Buffer.from(msg.payload.Body).toString("utf-8") or similar to decode strings.
@@ -33,6 +34,15 @@ Usage
 Almost all nodes are direct wrappers for the AWS Javascript API, so for information about available parameters consult the API docs https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS.html
 
 Parameters need to be specified as per the AWS API (typically LeadingUpperCase).
+
+if msg.AWSConfig is set, it will override the node configuration.  This allows you to use the same node/flow with different accounts.
+For example
+	msg.AWSConfig={
+		accessKeyId: "ACCESS KEY",
+		secretAccessKey:"SECRET KEY",
+		region:"Region"
+	}
+
 
 
 WARNING

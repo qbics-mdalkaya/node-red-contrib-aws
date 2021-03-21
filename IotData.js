@@ -1,6 +1,6 @@
 
 /**
- * Copyright 2017 Daniel Thomas.
+ * Copyright 2021 Daniel Thomas.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,9 +47,11 @@ module.exports = function(RED) {
             });
         }
 
-		var awsService = new AWS.IotData( { 'region': node.region } );
-
+		var awsService = new AWS.IotData( { 'region': node.region ,'endpoint':n.endPoint} );
+		
 		node.on("input", function(msg) {
+			var aService = msg.AWSConfig?new AWS.IotData(msg.AWSConfig) : awsService;
+
 			node.sendMsg = function (err, data, msg) {
 				if (err) {
 				    node.status({fill:"red",shape:"ring",text:"error"});
@@ -65,7 +67,7 @@ module.exports = function(RED) {
 
 			if (typeof service[node.operation] == "function"){
 				node.status({fill:"blue",shape:"dot",text:node.operation});
-				service[node.operation](awsService,msg,function(err,data){
+				service[node.operation](aService,msg,function(err,data){
    				node.sendMsg(err, data, msg);
    			});
 			} else {
