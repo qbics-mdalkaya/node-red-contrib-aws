@@ -50,8 +50,9 @@
       "AWS Tagging": "ResourceGroupsTaggingAPI.js",
       "Rekognition": "Rekognition.js",
       "Polly": "Polly.js",
-      "AWS ECS": "Ecs.js",
+      "AWS ECS": "ECS.js",
       "AWS Redshift": "Redshift.js",
+      "AWS Route53": "Route53.js",
       "amazon config": "config.js"
     }
   },
